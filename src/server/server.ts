@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import path = require('path');
 import userRoutes from '../route/user';
+import db from '../mysql/mysql';
 export default class Server {
 
     public app: Application;
@@ -13,6 +14,7 @@ export default class Server {
     constructor() {
         this.port = process.env.PORT || '8000';
         this.app = express();
+        this.dbConnection();
         this.midelwares();
         this.routes();
     }
@@ -39,5 +41,14 @@ export default class Server {
         this.app.listen(this.port, callbck);
         this.publicFolder();
     }
+
+   async dbConnection() {
+    try {
+        await db.authenticate();
+        console.log('DB is connected');
+    } catch (error) {
+        console.log(error);
+    }
+   }
 
 }
